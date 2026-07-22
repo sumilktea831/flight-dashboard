@@ -1,0 +1,188 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>機票價格追蹤</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1: #fcfcfb; --plane: #f9f9f7;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --good: #006300; --bad: #d03b3b; --warn: #fab219;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1: #1a1a19; --plane: #0d0d0d;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+      --good: #0ca30c; --bad: #e66767; --warn: #fab219;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1: #1a1a19; --plane: #0d0d0d;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --good: #0ca30c; --bad: #e66767; --warn: #fab219;
+  }
+  .viz-root {
+    font-family: system-ui, -apple-system, "Segoe UI", "Microsoft JhengHei", sans-serif;
+    background: var(--plane); color: var(--text-primary);
+    padding: 28px 20px 60px; max-width: 1080px; margin: 0 auto; line-height: 1.6;
+  }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .sub { color: var(--text-secondary); font-size: .875rem; margin: 0 0 24px; }
+  section { margin-bottom: 34px; }
+  h2 { font-size: 1rem; margin: 0 0 4px; }
+  .hint { color: var(--muted); font-size: .8125rem; margin: 0 0 14px; }
+  .card {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+  }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 12px; }
+  .tile-label { display: flex; align-items: center; gap: 7px; font-size: .8125rem;
+    color: var(--text-secondary); margin-bottom: 8px; }
+  .swatch { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .tile-value { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
+  .tile-meta { font-size: .75rem; color: var(--muted); margin-top: 5px; }
+  .delta-up { color: var(--bad); } .delta-down { color: var(--good); }
+  .pending { color: var(--muted); font-size: .9375rem; font-weight: 500; }
+  .chart-wrap { overflow-x: auto; }
+  svg { display: block; max-width: 100%; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 12px; font-size: .8125rem; }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; color: var(--text-secondary); }
+  table { border-collapse: collapse; width: 100%; font-size: .8125rem;
+    font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--grid); }
+  th { color: var(--text-secondary); font-weight: 600; }
+  td.num { text-align: right; }
+  details { margin-top: 14px; }
+  summary { cursor: pointer; font-size: .8125rem; color: var(--text-secondary); }
+  .table-scroll { overflow-x: auto; margin-top: 10px; }
+  .empty { color: var(--muted); font-size: .875rem; padding: 22px 0; text-align: center; }
+  .notice { border-left: 3px solid var(--warn); padding: 10px 14px; background: var(--surface-1);
+    border-radius: 0 8px 8px 0; font-size: .875rem; color: var(--text-secondary); }
+  .tt { position: fixed; pointer-events: none; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 11px; font-size: .78rem;
+    box-shadow: 0 4px 14px rgba(0,0,0,.14); opacity: 0; transition: opacity .1s; z-index: 9; }
+  .tt b { font-weight: 600; }
+</style>
+
+<div class="viz-root">
+  <h1>機票價格追蹤</h1>
+  <p class="sub">已累積 2 天資料 · 更新於 2026-07-22 13:41</p>
+  <section><div class="notice">目前有 5 條目標航線還在 Google 的查詢窗口外（約起飛前 330 天才開放）。最早約在 <b>2026-11-02</b> 開始查得到。在那之前，下面的「同季參考線」用 2026 年同一段日期的實際票價，讓你先知道這條路線大概值多少錢。</div></section><section><h2>最新價格</h2><p class="hint">單人單程／來回最低價。箭頭是跟上一筆有資料的紀錄相比。</p><div class="tiles"><div class="card"><div class="tile-label"><span class="swatch" style="background:#2a78d6"></span>去程 台北→馬德里（經濟）</div><div class="pending">尚未開賣</div><div class="tile-meta">約 2026-11-02 開始查得到</div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#008300"></span>轉接 馬德里→畢爾包（經濟）</div><div class="pending">尚未開賣</div><div class="tile-meta">約 2026-11-02 開始查得到</div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#e87ba4"></span>回程 巴塞隆納→台北（經濟）</div><div class="pending">尚未開賣</div><div class="tile-meta">約 2026-11-16 開始查得到</div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#eda100"></span>回程 巴塞隆納→台北（商務）</div><div class="pending">尚未開賣</div><div class="tile-meta">約 2026-11-16 開始查得到</div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#1baf7a"></span>基準線 台北⇄巴塞隆納 來回（經濟）</div><div class="pending">尚未開賣</div><div class="tile-meta">約 2026-11-02 開始查得到</div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#eb6834"></span>參考線 台北→馬德里（2026同季）</div><div class="tile-value">NT$18,187</div><div class="tile-meta">最低 18,187 · 最高 18,203 · 阿提哈德航空</div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#4a3aa7"></span>參考線 巴塞隆納→台北（2026同季）</div><div class="tile-value">NT$22,259 <span class="delta-down" style="font-size:.8125rem">▼ 30</span></div><div class="tile-meta">最低 22,259 · 最高 23,494 · 土耳其航空 / 長榮航空</div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#e34948"></span>參考線 台北⇄巴塞隆納 來回（2026同季）</div><div class="tile-value">NT$34,103</div><div class="tile-meta">最低 34,103 · 最高 34,108 · 深圳航空</div></div></div></section><section><h2>組合估算</h2><p class="hint">各段最低價相加。分開買通常比單一來回票貴，所以這是趨勢指標，不是實際報價。</p><div class="card"><table><tbody><tr><td>開口・全經濟（進BIO / 出BCN）<div class="tile-meta">去程 台北→馬德里（經濟） + 轉接 馬德里→畢爾包（經濟） + 回程 巴塞隆納→台北（經濟）</div></td><td class="num"><span class="pending">尚無完整資料</span></td></tr><tr><td>開口・舒適版（去經濟 / 回商務）<div class="tile-meta">去程 台北→馬德里（經濟） + 轉接 馬德里→畢爾包（經濟） + 回程 巴塞隆納→台北（商務）</div></td><td class="num"><span class="pending">尚無完整資料</span></td></tr><tr><td>參考線・2026同季開口<div class="tile-meta">參考線 台北→馬德里（2026同季） + 參考線 巴塞隆納→台北（2026同季）</div></td><td class="num"><b>NT$40,476</b> ／人　（兩人 NT$80,952）</td></tr></tbody></table></div></section><section><h2>價格趨勢</h2><p class="hint">每條航線各自縮放 —— 看的是「這條線在動嗎」，不是航線之間比高低。滑過資料點看當天的航空公司與轉機次數。</p><div class="tiles"><div class="card"><div class="tile-label"><span class="swatch" style="background:#2a78d6"></span>去程 台北→馬德里（經濟）</div><div class="chart-wrap" data-chart="0"></div><div class="tile-meta"></div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#008300"></span>轉接 馬德里→畢爾包（經濟）</div><div class="chart-wrap" data-chart="1"></div><div class="tile-meta"></div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#e87ba4"></span>回程 巴塞隆納→台北（經濟）</div><div class="chart-wrap" data-chart="2"></div><div class="tile-meta"></div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#eda100"></span>回程 巴塞隆納→台北（商務）</div><div class="chart-wrap" data-chart="3"></div><div class="tile-meta"></div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#1baf7a"></span>基準線 台北⇄巴塞隆納 來回（經濟）</div><div class="chart-wrap" data-chart="4"></div><div class="tile-meta"></div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#eb6834"></span>參考線 台北→馬德里（2026同季）</div><div class="chart-wrap" data-chart="5"></div><div class="tile-meta">18,187 – 18,203</div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#4a3aa7"></span>參考線 巴塞隆納→台北（2026同季）</div><div class="chart-wrap" data-chart="6"></div><div class="tile-meta">22,259 – 23,494</div></div><div class="card"><div class="tile-label"><span class="swatch" style="background:#e34948"></span>參考線 台北⇄巴塞隆納 來回（2026同季）</div><div class="chart-wrap" data-chart="7"></div><div class="tile-meta">34,103 – 34,108</div></div></div><details><summary>看完整表格</summary><div class="table-scroll"><table><thead><tr><th>航線</th><th>07-21</th><th>07-22</th></tr></thead><tbody><tr><td>去程 台北→馬德里（經濟）</td><td class="num">—</td><td class="num">—</td></tr><tr><td>轉接 馬德里→畢爾包（經濟）</td><td class="num">—</td><td class="num">—</td></tr><tr><td>回程 巴塞隆納→台北（經濟）</td><td class="num">—</td><td class="num">—</td></tr><tr><td>回程 巴塞隆納→台北（商務）</td><td class="num">—</td><td class="num">—</td></tr><tr><td>基準線 台北⇄巴塞隆納 來回（經濟）</td><td class="num">—</td><td class="num">—</td></tr><tr><td>參考線 台北→馬德里（2026同季）</td><td class="num">18,203</td><td class="num">18,187</td></tr><tr><td>參考線 巴塞隆納→台北（2026同季）</td><td class="num">23,494</td><td class="num">22,259</td></tr><tr><td>參考線 台北⇄巴塞隆納 來回（2026同季）</td><td class="num">34,108</td><td class="num">34,103</td></tr></tbody></table></div></details></section>
+  <div class="tt" id="tt"></div>
+</div>
+<script>
+const MODEL = {"legs": [{"id": "out-mad", "label": "去程 台北→馬德里（經濟）", "route": "TPE→MAD", "seat": "economy", "depart_date": "2027-09-28", "points": [], "statuses": [{"date": "2026-07-21", "status": "out_of_window", "note": "尚未開賣（起飛前 434 天，超出約 330 天的查詢窗口）"}, {"date": "2026-07-22", "status": "out_of_window", "note": "尚未開賣（起飛前 433 天，超出約 330 天的查詢窗口）"}, {"date": "2026-07-22", "status": "out_of_window", "note": "尚未開賣（起飛前 433 天，超出約 330 天的查詢窗口）"}], "latest": null, "min": null, "max": null, "prev": null, "delta": null, "status": "out_of_window", "note": "尚未開賣（起飛前 433 天，超出約 330 天的查詢窗口）", "opens_on": "2026-11-02", "light": "#2a78d6", "dark": "#3987e5"}, {"id": "hop-mad-bio", "label": "轉接 馬德里→畢爾包（經濟）", "route": "MAD→BIO", "seat": "economy", "depart_date": "2027-09-28", "points": [], "statuses": [{"date": "2026-07-21", "status": "out_of_window", "note": "尚未開賣（起飛前 434 天，超出約 330 天的查詢窗口）"}, {"date": "2026-07-22", "status": "out_of_window", "note": "尚未開賣（起飛前 433 天，超出約 330 天的查詢窗口）"}, {"date": "2026-07-22", "status": "out_of_window", "note": "尚未開賣（起飛前 433 天，超出約 330 天的查詢窗口）"}], "latest": null, "min": null, "max": null, "prev": null, "delta": null, "status": "out_of_window", "note": "尚未開賣（起飛前 433 天，超出約 330 天的查詢窗口）", "opens_on": "2026-11-02", "light": "#008300", "dark": "#008300"}, {"id": "ret-bcn-eco", "label": "回程 巴塞隆納→台北（經濟）", "route": "BCN→TPE", "seat": "economy", "depart_date": "2027-10-12", "points": [], "statuses": [{"date": "2026-07-21", "status": "out_of_window", "note": "尚未開賣（起飛前 448 天，超出約 330 天的查詢窗口）"}, {"date": "2026-07-22", "status": "out_of_window", "note": "尚未開賣（起飛前 447 天，超出約 330 天的查詢窗口）"}, {"date": "2026-07-22", "status": "out_of_window", "note": "尚未開賣（起飛前 447 天，超出約 330 天的查詢窗口）"}], "latest": null, "min": null, "max": null, "prev": null, "delta": null, "status": "out_of_window", "note": "尚未開賣（起飛前 447 天，超出約 330 天的查詢窗口）", "opens_on": "2026-11-16", "light": "#e87ba4", "dark": "#d55181"}, {"id": "ret-bcn-biz", "label": "回程 巴塞隆納→台北（商務）", "route": "BCN→TPE", "seat": "business", "depart_date": "2027-10-12", "points": [], "statuses": [{"date": "2026-07-21", "status": "out_of_window", "note": "尚未開賣（起飛前 448 天，超出約 330 天的查詢窗口）"}, {"date": "2026-07-22", "status": "out_of_window", "note": "尚未開賣（起飛前 447 天，超出約 330 天的查詢窗口）"}, {"date": "2026-07-22", "status": "out_of_window", "note": "尚未開賣（起飛前 447 天，超出約 330 天的查詢窗口）"}], "latest": null, "min": null, "max": null, "prev": null, "delta": null, "status": "out_of_window", "note": "尚未開賣（起飛前 447 天，超出約 330 天的查詢窗口）", "opens_on": "2026-11-16", "light": "#eda100", "dark": "#c98500"}, {"id": "bcn-rt", "label": "基準線 台北⇄巴塞隆納 來回（經濟）", "route": "TPE→BCN→TPE", "seat": "economy", "depart_date": "2027-09-28", "points": [], "statuses": [{"date": "2026-07-21", "status": "out_of_window", "note": "尚未開賣（起飛前 434 天，超出約 330 天的查詢窗口）"}, {"date": "2026-07-22", "status": "out_of_window", "note": "尚未開賣（起飛前 433 天，超出約 330 天的查詢窗口）"}, {"date": "2026-07-22", "status": "out_of_window", "note": "尚未開賣（起飛前 433 天，超出約 330 天的查詢窗口）"}], "latest": null, "min": null, "max": null, "prev": null, "delta": null, "status": "out_of_window", "note": "尚未開賣（起飛前 433 天，超出約 330 天的查詢窗口）", "opens_on": "2026-11-02", "light": "#1baf7a", "dark": "#199e70"}, {"id": "ref-out-mad-2026", "label": "參考線 台北→馬德里（2026同季）", "route": "TPE→MAD", "seat": "economy", "depart_date": "2026-09-28", "points": [{"date": "2026-07-21", "price": 18203, "airlines": "阿提哈德航空", "stops": "1", "duration_min": "750"}, {"date": "2026-07-22", "price": 18187, "airlines": "阿提哈德航空", "stops": "1", "duration_min": "750"}, {"date": "2026-07-22", "price": 18187, "airlines": "阿提哈德航空", "stops": "1", "duration_min": "750"}], "statuses": [{"date": "2026-07-21", "status": "ok", "note": ""}, {"date": "2026-07-22", "status": "ok", "note": ""}, {"date": "2026-07-22", "status": "ok", "note": ""}], "latest": {"date": "2026-07-22", "price": 18187, "airlines": "阿提哈德航空", "stops": "1", "duration_min": "750"}, "min": 18187, "max": 18203, "prev": 18187, "delta": 0, "status": "ok", "note": "", "opens_on": "2025-11-02", "light": "#eb6834", "dark": "#d95926"}, {"id": "ref-ret-bcn-2026", "label": "參考線 巴塞隆納→台北（2026同季）", "route": "BCN→TPE", "seat": "economy", "depart_date": "2026-10-12", "points": [{"date": "2026-07-21", "price": 23494, "airlines": "英國航空 / 長榮航空", "stops": "2", "duration_min": "1655"}, {"date": "2026-07-22", "price": 22289, "airlines": "土耳其航空 / 長榮航空", "stops": "2", "duration_min": "1600"}, {"date": "2026-07-22", "price": 22259, "airlines": "土耳其航空 / 長榮航空", "stops": "2", "duration_min": "1600"}], "statuses": [{"date": "2026-07-21", "status": "ok", "note": ""}, {"date": "2026-07-22", "status": "ok", "note": ""}, {"date": "2026-07-22", "status": "ok", "note": ""}], "latest": {"date": "2026-07-22", "price": 22259, "airlines": "土耳其航空 / 長榮航空", "stops": "2", "duration_min": "1600"}, "min": 22259, "max": 23494, "prev": 22289, "delta": -30, "status": "ok", "note": "", "opens_on": "2025-11-16", "light": "#4a3aa7", "dark": "#9085e9"}, {"id": "ref-bcn-rt-2026", "label": "參考線 台北⇄巴塞隆納 來回（2026同季）", "route": "TPE→BCN→TPE", "seat": "economy", "depart_date": "2026-09-28", "points": [{"date": "2026-07-21", "price": 34108, "airlines": "深圳航空", "stops": "1", "duration_min": "2405"}, {"date": "2026-07-22", "price": 34103, "airlines": "深圳航空", "stops": "1", "duration_min": "2405"}, {"date": "2026-07-22", "price": 34103, "airlines": "深圳航空", "stops": "1", "duration_min": "2405"}], "statuses": [{"date": "2026-07-21", "status": "ok", "note": ""}, {"date": "2026-07-22", "status": "ok", "note": ""}, {"date": "2026-07-22", "status": "ok", "note": ""}], "latest": {"date": "2026-07-22", "price": 34103, "airlines": "深圳航空", "stops": "1", "duration_min": "2405"}, "min": 34103, "max": 34108, "prev": 34103, "delta": 0, "status": "ok", "note": "", "opens_on": "2025-11-02", "light": "#e34948", "dark": "#e66767"}], "combos": [{"label": "開口・全經濟（進BIO / 出BCN）", "parts": ["去程 台北→馬德里（經濟）", "轉接 馬德里→畢爾包（經濟）", "回程 巴塞隆納→台北（經濟）"], "points": [], "latest": null, "complete": false, "missing": ["去程 台北→馬德里（經濟）", "轉接 馬德里→畢爾包（經濟）", "回程 巴塞隆納→台北（經濟）"]}, {"label": "開口・舒適版（去經濟 / 回商務）", "parts": ["去程 台北→馬德里（經濟）", "轉接 馬德里→畢爾包（經濟）", "回程 巴塞隆納→台北（商務）"], "points": [], "latest": null, "complete": false, "missing": ["去程 台北→馬德里（經濟）", "轉接 馬德里→畢爾包（經濟）", "回程 巴塞隆納→台北（商務）"]}, {"label": "參考線・2026同季開口", "parts": ["參考線 台北→馬德里（2026同季）", "參考線 巴塞隆納→台北（2026同季）"], "points": [{"date": "2026-07-21", "price": 41697}, {"date": "2026-07-22", "price": 40476}], "latest": 40476, "complete": true, "missing": []}], "dates": ["2026-07-21", "2026-07-22"], "generated": "2026-07-22 13:41", "days_tracked": 2};
+
+const fmt = n => 'NT$' + n.toLocaleString('zh-TW');
+const isDark = () => document.documentElement.dataset.theme === 'dark' ||
+  (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+const tt = document.getElementById('tt');
+
+function showTip(html, x, y) {
+  tt.innerHTML = html; tt.style.opacity = '1';
+  const r = tt.getBoundingClientRect();
+  tt.style.left = Math.min(x + 14, innerWidth - r.width - 8) + 'px';
+  tt.style.top = Math.max(y - r.height - 12, 8) + 'px';
+}
+const hideTip = () => tt.style.opacity = '0';
+
+function draw(host) {
+  // 一張圖只畫一條航線，各自縮放 y 軸。放在同一張圖上的話，商務艙（約 9 萬）
+  // 會把馬德里→畢爾包（約 2.5 千）壓成一條平線，小額的變動完全看不見。
+  const series = [MODEL.legs[+host.dataset.chart]].filter(Boolean);
+  const live = series.filter(s => s.points.length);
+  host.innerHTML = '';
+  if (!live.length) {
+    host.innerHTML = '<p class="empty">尚未開賣</p>';
+    return;
+  }
+  const dates = [...new Set(live.flatMap(s => s.points.map(p => p.date)))].sort();
+  const prices = live.flatMap(s => s.points.map(p => p.price));
+  // 單點時給一個假的價格區間，否則 y 軸壓成一條線
+  let lo = Math.min(...prices), hi = Math.max(...prices);
+  if (lo === hi) { lo = lo * 0.9; hi = hi * 1.1; }
+  const pad = (hi - lo) * 0.12; lo -= pad; hi += pad;
+
+  const W = Math.max(host.clientWidth || 320, 260), H = 170;
+  const M = { t: 12, r: 24, b: 26, l: 50 };  // r 要容得下最後一個日期標籤的一半
+  const iw = W - M.l - M.r, ih = H - M.t - M.b;
+  const X = i => dates.length === 1 ? M.l + iw / 2
+    : M.l + (dates.indexOf(i) / (dates.length - 1)) * iw;
+  const Y = v => M.t + ih - ((v - lo) / (hi - lo)) * ih;
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', W); svg.setAttribute('height', H);
+  svg.setAttribute('role', 'img');
+  const el = (t, a) => { const e = document.createElementNS(NS, t);
+    for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const css = k => getComputedStyle(host.closest('.viz-root')).getPropertyValue(k).trim();
+
+  // 格線與 y 軸刻度（recessive）
+  for (let g = 0; g <= 3; g++) {
+    const v = lo + (hi - lo) * g / 3, y = Y(v);
+    svg.appendChild(el('line', { x1: M.l, x2: W - M.r, y1: y, y2: y,
+      stroke: css('--grid'), 'stroke-width': 1 }));
+    const t = el('text', { x: M.l - 8, y: y + 4, 'text-anchor': 'end',
+      fill: css('--muted'), 'font-size': 10.5 });
+    // 小額航線（接駁段約 2.5k）用整數 k 會全部顯示成同一個數字
+    t.textContent = (hi - lo) < 4000
+      ? Math.round(v).toLocaleString('zh-TW')
+      : Math.round(v / 1000) + 'k';
+    svg.appendChild(t);
+  }
+  svg.appendChild(el('line', { x1: M.l, x2: W - M.r, y1: M.t + ih, y2: M.t + ih,
+    stroke: css('--baseline'), 'stroke-width': 1 }));
+
+  // x 軸日期：最多 6 個，避免擠在一起
+  const step = Math.max(1, Math.ceil(dates.length / 3));
+  dates.forEach((d, i) => {
+    if (i % step && i !== dates.length - 1) return;
+    const t = el('text', { x: X(d), y: H - 8, 'text-anchor': 'middle',
+      fill: css('--muted'), 'font-size': 10.5 });
+    t.textContent = d.slice(5);
+    svg.appendChild(t);
+  });
+
+  const dark = isDark();
+  live.forEach(s => {
+    const color = dark ? s.dark : s.light;
+    const pts = s.points.slice().sort((a, b) => a.date < b.date ? -1 : 1);
+    if (pts.length > 1) {
+      svg.appendChild(el('path', {
+        d: pts.map((p, i) => (i ? 'L' : 'M') + X(p.date) + ' ' + Y(p.price)).join(' '),
+        fill: 'none', stroke: color, 'stroke-width': 2,
+        'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+    }
+    pts.forEach(p => {
+      // 2px 表面環，讓重疊的點彼此分得開
+      svg.appendChild(el('circle', { cx: X(p.date), cy: Y(p.price), r: 4,
+        fill: color, stroke: css('--surface-1'), 'stroke-width': 2 }));
+      const hit = el('circle', { cx: X(p.date), cy: Y(p.price), r: 11,
+        fill: 'transparent', style: 'cursor:pointer' });
+      hit.addEventListener('mousemove', e => showTip(
+        `<b>${s.label}</b><br>${p.date} · ${fmt(p.price)}` +
+        (p.airlines ? `<br>${p.airlines}` : '') +
+        (p.stops !== undefined && p.stops !== '' ? ` · ${p.stops} 轉` : ''),
+        e.clientX, e.clientY));
+      hit.addEventListener('mouseleave', hideTip);
+      svg.appendChild(hit);
+    });
+  });
+  host.appendChild(svg);
+}
+
+function drawAll() { document.querySelectorAll('[data-chart]').forEach(draw); }
+drawAll();
+addEventListener('resize', drawAll);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', drawAll);
+new MutationObserver(drawAll).observe(document.documentElement,
+  { attributes: true, attributeFilter: ['data-theme'] });
+
+</script>
